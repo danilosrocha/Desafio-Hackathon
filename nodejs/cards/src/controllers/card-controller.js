@@ -1,12 +1,15 @@
 const neDB = require("../configurations/database");
 const api = {};
 
+
 api.findAll = (request, response) => {
   neDB
     .find({})
     .sort({ name: 1 })
     .exec((exception, cards) => {
-      
+      if (cards == null) {
+        response.status(404);
+      }
       console.log("Card LISTED Successfully", cards);
       response.json(cards);
     });
@@ -25,7 +28,9 @@ api.save = (request, response) => {
 api.update = (request, response) => {
   cardData = request.body;
   neDB.update({ _id: request.params.id }, {cardData}, (exception, cards) => {
-    
+    if (cards == null) {
+      response.status(404);
+    }
     console.log("Card data UPDATE successfully", cards);
     response.json(cards);
   });
@@ -33,7 +38,9 @@ api.update = (request, response) => {
 
 api.delete = (request, response) => {
   neDB.remove({ _id: request.params.id }, {}, (exception, cards) => {
-    
+    if (cards == null) {
+      response.status(404);
+    }
     console.log("Card data REMOVE successfully", cards);
     response.json(cards);
   });
@@ -52,5 +59,6 @@ api.findOne = (request, response) => {
       response.json(cards);
     });
 };
+
 
 module.exports = api;
