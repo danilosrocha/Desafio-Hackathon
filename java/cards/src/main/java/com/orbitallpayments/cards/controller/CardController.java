@@ -46,8 +46,9 @@ public class CardController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Card> delete(@PathVariable (value = "id") Long id) {
-
         Optional<Card> fetchedCard = cardService.findById(id);
+        if (!fetchedCard.isPresent())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         cardService.delete(fetchedCard.get());
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
