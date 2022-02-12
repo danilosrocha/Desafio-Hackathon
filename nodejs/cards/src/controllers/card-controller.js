@@ -1,15 +1,12 @@
 const neDB = require("../configurations/database");
 const api = {};
 
-
 api.findAll = (request, response) => {
   neDB
     .find({})
     .sort({ name: 1 })
     .exec((exception, cards) => {
-      if (cards == null) {
-        response.status(404);
-      }
+     
       console.log("Card LISTED Successfully", cards);
       response.json(cards);
     });
@@ -18,7 +15,6 @@ api.findAll = (request, response) => {
 api.save = (request, response) => {
   const cardData = request.body;
   neDB.insert(cardData, (exception, cards) => {
-
     console.log("Card data SAVED successfully", cards);
     response.status(201);
     response.json(cards);
@@ -27,7 +23,7 @@ api.save = (request, response) => {
 
 api.update = (request, response) => {
   cardData = request.body;
-  neDB.update({ _id: request.params.id }, {cardData}, (exception, cards) => {
+  neDB.update({ _id: request.params.id }, { cardData }, (exception, cards) => {
     if (cards == null) {
       response.status(404);
     }
@@ -47,18 +43,19 @@ api.delete = (request, response) => {
 };
 
 api.findOne = (request, response) => {
-  neDB.findOne({ _id: request.params.id }).sort({ name: 1 }).exec((exception, cards) => {
+  neDB
+    .findOne({ _id: request.params.id })
+    .sort({ name: 1 })
+    .exec((exception, cards) => {
       if (cards == null) {
         const setence = "Unable to LIST by ID";
         console.error(setence);
         response.status(404);
       } else {
         console.log("Successfully LISTED by ID", cards);
-        
-      };
+      }
       response.json(cards);
     });
 };
-
 
 module.exports = api;
